@@ -1,0 +1,53 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Frutas</title>
+    <link rel="stylesheet" href="assets/styles/styles.css">
+</head>
+
+<body>
+    <br>
+    <!-- Menu -->
+    <div class="navbar">
+        <h2 class="logo">Gerenciador de Frutas 🍎</h2>
+        <ul class="nav-links">
+            <li><a href="https://crud-fruit.fly.dev/" target="_blank">Sobre</a></li>
+            <li><a href="https://github.com/DevAlexFR/API-Fruit" target="_blank">Git</a></li>
+        </ul>
+    </div>
+    <br>
+
+    <!-- Principal -->
+    <div class="container">
+        <div class="header">
+            <h1>🍎🍉🍓🍅🍒</h1>
+        </div>
+
+        <button class="btn btn-primary" onclick="openAddPrompt()">Adicionar Fruta</button>
+        <div id="loadingSpinner" class="spinner hidden"></div>
+        <div id="fruitsContainer"></div>
+    </div>
+
+    <!-- Prompt -->
+    <div id="customPrompt" class="custom-prompt hidden">
+        <div class="custom-prompt-content">
+            <h3 id="promptTitle">Editar Nome da Fruta</h3>
+            <input type="text" id="promptInput" placeholder="Digite o nome da fruta" />
+            <p id="errorMessage" class="error-message hidden">Nome inválido! Por favor, insira o nome de uma fruta.</p>
+            <div class="custom-prompt-buttons">
+                <button class="btn btn-primary" onclick="confirmPrompt()">Confirmar</button>
+                <button class="btn btn-danger" onclick="closePrompt()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <footer id="footer">
+        <div class="footer-content">
+            <p>Gerenciador de Frutas © 2024 | Feito por Alex Flores</p>
+        </div>
+    </footer>
+    <br>
+
+    <script src="assets/js/script.js"></script>
+</body>
