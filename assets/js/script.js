@@ -9,15 +9,16 @@ var currentIndex = null;
 // URL Base da API
 var API_URL = 'https://crud-fruit.fly.dev';
 
+// Lista de frutas válidas
+var validFruits = FRUIT_LIST;
+
 // Oculta o prompt ao carregar
 document.addEventListener('DOMContentLoaded', function () {
     customPrompt.classList.add('hidden');
     customPrompt.style.display = 'none'; // Garante ocultação adicional
 });
 
-/**
- * Exibe o prompt para adicionar frutas
- */
+/** Exibe o prompt para adicionar frutas */
 function openAddPrompt() {
     isEditing = false;
     currentIndex = null;
@@ -28,9 +29,7 @@ function openAddPrompt() {
     customPrompt.style.display = 'flex';
 }
 
-/**
- * Exibe o prompt para editar frutas
- */
+/** Exibe o prompt para editar frutas */
 function openPrompt(index, currentName) {
     isEditing = true;
     currentIndex = index;
@@ -41,9 +40,7 @@ function openPrompt(index, currentName) {
     customPrompt.style.display = 'flex';
 }
 
-/**
- * Fecha o prompt
- */
+/** Fecha o prompt */
 function closePrompt() {
     customPrompt.classList.add('hidden');
     customPrompt.style.display = 'none';
@@ -51,30 +48,38 @@ function closePrompt() {
     hideError();
 }
 
-/**
- * Exibe mensagens de erro
- */
+/** Exibe mensagens de erro */
 function showError(message) {
     errorMessage.textContent = message;
-    errorMessage.classList.add('visible');
+    errorMessage.classList.remove('hidden'); // Remove a classe que esconde
+    errorMessage.classList.add('visible');  // Adiciona a classe para mostrar
 }
 
-/**
- * Esconde mensagens de erro
- */
+/** Esconde mensagens de erro */
 function hideError() {
-    errorMessage.classList.remove('visible');
+    errorMessage.classList.remove('visible'); // Remove a classe de exibição
+    errorMessage.classList.add('hidden');    // Adiciona a classe para esconder
 }
 
-/**
- * Confirma a ação do prompt
- */
+/** Valida se o nome é uma fruta válida */
+function isValidFruit(name) {
+    return validFruits.includes(name);
+}
+
+/** Confirma a ação do prompt */
 function confirmPrompt() {
     var fruitName = promptInput.value.trim();
+
     if (fruitName === "") {
         showError("O nome não pode estar vazio!");
         return;
     }
+
+    if (!isValidFruit(fruitName)) {
+        showError("O nome inserido não é uma fruta válida!");
+        return;
+    }
+
     if (isEditing) {
         updateFruit(currentIndex, fruitName);
     } else {
@@ -83,9 +88,7 @@ function confirmPrompt() {
     closePrompt();
 }
 
-/**
- * Carrega as frutas da API e exibe na tela
- */
+/** Carrega as frutas da API e exibe na tela */
 function loadFruits() {
     fetch(API_URL + '/fruits/')
         .then(response => response.json())
@@ -108,9 +111,7 @@ function loadFruits() {
         .catch(console.error);
 }
 
-/**
- * Adiciona uma nova fruta na API
- */
+/** Adiciona uma nova fruta na API */
 function addFruit(name) {
     fetch(API_URL + '/fruit/', {
         method: 'POST',
@@ -121,9 +122,7 @@ function addFruit(name) {
         .catch(console.error);
 }
 
-/**
- * Atualiza o nome de uma fruta existente na API
- */
+/** Atualiza o nome de uma fruta existente na API */
 function updateFruit(index, name) {
     fetch(API_URL + '/fruits/' + index, {
         method: 'PUT',
@@ -134,9 +133,7 @@ function updateFruit(index, name) {
         .catch(console.error);
 }
 
-/**
- * Deleta uma fruta da API
- */
+/** Deleta uma fruta da API */
 function deleteFruit(index) {
     fetch(API_URL + '/fruits/' + index, {
         method: 'DELETE'
@@ -147,35 +144,3 @@ function deleteFruit(index) {
 
 // Carrega as frutas ao inicializar
 loadFruits();
-
-function toggleSpinner(show) {
-    const spinner = document.getElementById('loadingSpinner');
-    spinner.style.display = show ? 'block' : 'none';
-}
-
-function loadFruits() {
-    toggleSpinner(true); // Mostra o spinner
-    fetch(API_URL + '/fruits/')
-        .then(response => response.json())
-        .then(fruits => {
-            toggleSpinner(false); // Oculta o spinner
-            const fruitsContainer = document.getElementById('fruitsContainer');
-            fruitsContainer.innerHTML = '';
-            fruits.forEach((fruit, index) => {
-                const fruitCard = document.createElement('div');
-                fruitCard.classList.add('card');
-                fruitCard.innerHTML = `
-                    <h3 class="card-title">${fruit.name}</h3>
-                    <div class="card-buttons">
-                        <button class="btn btn-primary" onclick="openPrompt(${index}, '${fruit.name}')">Editar</button>
-                        <button class="btn btn-danger" onclick="deleteFruit(${index})">Deletar</button>
-                    </div>
-                `;
-                fruitsContainer.appendChild(fruitCard);
-            });
-        })
-        .catch(error => {
-            console.error(error);
-            toggleSpinner(false); // Oculta o spinner em caso de erro
-        });
-}

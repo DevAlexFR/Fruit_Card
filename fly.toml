@@ -1,0 +1,14 @@
+app = "crud-fruits"
+
+[[services]]
+  http_checks = []
+  internal_port = 8080
+  processes = ["app"]
+  script = ""
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+  [[services.tcp_checks]]
